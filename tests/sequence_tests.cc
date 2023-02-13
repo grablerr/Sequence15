@@ -12,7 +12,7 @@ TEST(SequenceTests, SquareTest0) {
     int r3 = s.compute_nth(3);
     int r4 = s.compute_nth(4);
     int r5 = s.compute_nth(5);
-    int r6 = s.compute_nth(6);
+
     
     // Assert
     EXPECT_EQ(r1, 1);
