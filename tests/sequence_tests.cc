@@ -2,8 +2,6 @@
 
 #include <sequence/sequence.h>
 
-int search_seq(int sqr, int fact);
-
 TEST(SequenceTests, SquareTest0) {
     // Arrange
     Sequence s(SequenceType::SQUARE, 0);
