@@ -1,9 +1,5 @@
 #include <sequence/sequence.h>
 
-int sum_stub(int lhs, int rhs) {
-	return lhs + rhs;
-}
-
 Sequence::Sequence(SequenceType type, int c) {
 	this->type = type;
 	this->c = c;
@@ -15,7 +11,10 @@ int Sequence::compute_nth(int n) {
 	case SQUARE:
 		return n * n + c;
 	case FACTORIAL:
-		return n;//todo
+		if (n == 1) return 1;
+		else {
+			return n * Sequence::compute_nth(n - 1);
+		}
 	default:
 		return 0;
 	}

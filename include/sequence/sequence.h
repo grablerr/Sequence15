@@ -1,7 +1,5 @@
 #pragma once
 
-int sum_stub(int lhs, int rhs);
-
 enum SequenceType
 {
 	SQUARE,
@@ -14,4 +12,5 @@ class Sequence {
 public:
 	Sequence(SequenceType type, int c);
 	int compute_nth(int n);
+
 };
