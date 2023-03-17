@@ -1,13 +1,13 @@
 #include <sequence/sequence.h>
 #include <stdexcept>
 
+using namespace sequences;
 using namespace std;
 
-SequenceList::SequenceList() {
-	_size = 0;
-}
 
-int SequenceList::get_size() {
+SequenceList::SequenceList() : _size(0) {}
+
+int SequenceList::get_size() const{
 	return _size;
 }
 
@@ -42,4 +42,20 @@ void SequenceList::remove(int index) {
     }
 
     --_size;
+}
+
+int sequences::index_of_min_value(const SequenceList& sequence, int c) {
+    int last_index = -1;
+    int min_value = 0;
+
+    const auto size = sequence.get_size();
+    for (int i = 0; i < size; ++i) {
+        const auto value = sequence[i].compute_nth(c);
+        if (last_index == -1 || value <= min_value) {
+            last_index = i;
+            min_value = value;
+        }
+    }
+
+    return last_index;
 }
