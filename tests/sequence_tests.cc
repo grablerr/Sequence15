@@ -90,4 +90,24 @@ TEST(SequenceTests, FactorialTest5) {
     EXPECT_EQ(r1, 120);
 }
 
+TEST(SequenceTests, SetShiftTest1) {
+
+    Sequence s(SequenceType::SQUARE,6);
+    s.set_shift(8);
+
+    int r1 = s.get_shift();
+
+    EXPECT_EQ(r1, 8);
+}
+
+TEST(SequenceTests, SetShiftTest2) {
+
+    Sequence s(SequenceType::SQUARE,0);
+    s.set_shift(-4);
+
+    int r1 = s.get_shift();
+
+    EXPECT_EQ(r1, -4);
+}
+
 

@@ -18,6 +18,8 @@ namespace sequences {
 		Sequence();
 		SequenceType get_type() const;
 		int compute_nth(int n) const;
+		int set_shift(int shift);
+		int get_shift();
 	};
 
 	bool operator==(const Sequence& lhs, const Sequence& rhs);
