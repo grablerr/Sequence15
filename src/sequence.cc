@@ -33,19 +33,18 @@ int Sequence::compute_nth(int n) const{
 
 int Sequence::set_shift(int shift) {
 	_shift = shift;
-	return shift;
+	return 0;
 }
 
 int Sequence::get_shift() {
 	return _shift;
 }
 
-bool sequences::operator==(const Sequence& lhs, const Sequence& rhs) {
-	return
-		lhs.get_type() == rhs.get_type();
-}
-
-bool sequences::operator!=(const Sequence& lhs, const Sequence& rhs) {
-	return !(lhs == rhs);
-}
-
+//bool sequences::operator==(const Sequence& lhs, const Sequence& rhs) {
+//	return
+//		lhs.get_type() == rhs.get_type();
+//}
+//
+//bool sequences::operator!=(const Sequence& lhs, const Sequence& rhs) {
+//	return !(lhs == rhs);
+//}

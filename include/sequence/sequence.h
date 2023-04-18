@@ -26,20 +26,22 @@ namespace sequences {
 	bool operator!=(const Sequence& lhs, const Sequence& rhs);
 
 	class SequenceList {
-	public:
-		static const int CAPACITY = 10;
-
-	private:
-		Sequence _data[CAPACITY] = {};
 		int _size;
-
+		Sequence** _array;
 	public:
-		SequenceList();
+		SequenceList(const SequenceList& arr);
+		SequenceList() : _size(0), _array(nullptr) {};
+		SequenceList(int size);
 		int get_size() const;
-		Sequence operator[](int index) const;
-		void insert(int index, Sequence s);
+		void insert(int index, Sequence& s);
 		void remove(int index);
 
+		Sequence& operator[](int index);
+		Sequence operator[](int index) const;
+
+		void swap(SequenceList& arr);
+		~SequenceList();
+		SequenceList& operator=(SequenceList arr);
 	};
 
 	int index_of_min_value(const SequenceList& sequence, int c);
