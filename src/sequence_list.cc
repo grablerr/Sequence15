@@ -1,6 +1,7 @@
 #include <sequence/sequence.h>
 #include <stdexcept>
 
+
 using namespace sequences;
 
 

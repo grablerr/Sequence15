@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 namespace sequences {
 
@@ -13,6 +14,8 @@ namespace sequences {
 		int _shift;
 
 	public:
+		friend std::ostream& operator<<(std::ostream& out, const SequenceType& type);
+		friend std::ostream& operator<<(std::ostream& out, const Sequence& seq);
 		Sequence(SequenceType type, int shift);
 		Sequence(SequenceType type);
 		Sequence();
@@ -21,9 +24,6 @@ namespace sequences {
 		int set_shift(int shift);
 		int get_shift();
 	};
-
-	bool operator==(const Sequence& lhs, const Sequence& rhs);
-	bool operator!=(const Sequence& lhs, const Sequence& rhs);
 
 	class SequenceList {
 		int _size;

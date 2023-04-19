@@ -32,6 +32,11 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # Объявляем тесты
+add_executable(Console 
+            "Console/Console.cc" 
+            "include/sequence/sequence.h")
+target_link_libraries(Console PRIVATE sequence)
+
 add_executable(sequence_tests 
     "tests/sequence_list_tests.cc"
     "tests/sequence_tests.cc"
