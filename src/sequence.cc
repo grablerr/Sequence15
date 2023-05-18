@@ -1,63 +1,67 @@
+#include <sequence/sequence.h>
+
+#include <cassert>
+#include <cmath>
 #include <cstdio>
 #include <stdexcept>
-#include <sequence/sequence.h>
 #include <cstdlib>
 #include <iostream>
 #include <string>
 
 using namespace sequences;
+using namespace std;
 
-Sequence::Sequence(SequenceType type, int shift) {
-	this->_type = type;
-	this->_shift = shift;
-}
-Sequence::Sequence(SequenceType type) {
-	this->_type = type;
-}
+FactSequence::FactSequence(int i) : _i(i) {};
 
-Sequence::Sequence() : _type(SequenceType::SQUARE), _shift(1) { }
-
-SequenceType Sequence::get_type() const {
-	return _type;
+int FactSequence::get_i() const {
+	return _i;
 }
 
-int Sequence::compute_nth(int n) const {
-	switch (_type)
-	{
-	case SQUARE:
-		return n * n + _shift;
-	case FACTORIAL:
-		if (n == 0 || n == 1) { return 1; }
-		else { return n * Sequence::compute_nth(n - 1); }
-	default:
-		return 0;
+int FactSequence::compute_nth() const {
+	int result=1;
+	for (int i = 2; i <= get_i(); i++) {
+		result *= i;
 	}
+	return result;
 }
 
-int Sequence::set_shift(int shift) {
-	_shift = shift;
-	return 0;
+SequencePtr FactSequence::clone() const {
+	return make_shared<FactSequence>(_i);
 }
 
-int Sequence::get_shift() {
+bool FactSequence::equals(SequencePtr other) const {
+	const auto downcast_other = dynamic_pointer_cast<FactSequence>(other);
+	if (downcast_other == nullptr) {
+		return false;}
+	return _i == downcast_other->_i;
+}
+
+SquareSequence::SquareSequence(int i, int shift): _i(i), _shift(shift){}
+
+int SquareSequence::get_i() const {
+	return _i;
+}
+
+int SquareSequence::get_shift() const {
 	return _shift;
 }
 
-std::ostream& sequences::operator<<(std::ostream& out, const SequenceType& type) {
-	switch (type) {
-	case SQUARE:
-		out << "SQUARE";
-		return out;
-	case FACTORIAL:
-		out << "FACTORIAL";
-		return out;
-	}
-
+void SquareSequence::set_shift(int shift) {
+	_shift = shift;
 }
 
-std::ostream& sequences::operator<<(std::ostream& out, const Sequence& seq) {
-	int t = seq._shift;
-	if (seq.get_type() == SQUARE) { out << "Type: " << seq.get_type()<< "|" << "Shift: " << t; }
-	else(out << "Type: " << seq.get_type());
-	return out;
+int SquareSequence::compute_nth() const {
+	return get_i() * get_i() + get_shift();
+}
+
+SequencePtr SquareSequence::clone() const {
+	return make_shared<SquareSequence>(_i, _shift);
+}
+
+bool SquareSequence::equals(SequencePtr other) const {
+	const auto downcast_other = dynamic_pointer_cast<SquareSequence>(other);
+	if (downcast_other == nullptr) {
+		return false;
+	}
+	return _i == downcast_other->_i;
 }

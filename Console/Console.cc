@@ -17,52 +17,68 @@ int get_key() {
 void PrintList(SequenceList& arr) {
 	system("cls");
 	if (arr.get_size() == 0)
-		cout << "Массив последовательностей пуст";
+		cout << "\033[0;31mМассив последовательностей пуст\033[0m";
 	for (int i = 0; i < arr.get_size(); ++i) {
-		cout << "[" << i+1 << "]\t" << arr[i] << endl;
+		auto seq = arr[i];
+		auto square_seq = dynamic_cast<SquareSequence*>(seq.get());
+		auto fact_seq = dynamic_cast<FactSequence*>(seq.get());
+		if (square_seq != nullptr) {
+			cout << "Square";
+			cout << " [" << square_seq->get_i() << "]";
+			cout << " [" << square_seq->get_shift() << "]" << endl;
+		}
+		else if (fact_seq != nullptr) {
+			cout << "Factorial";
+			cout << " [" << fact_seq->get_i() << "]" << endl;
+		}
 	}
+
 	cout << endl;
-	cout << "Для продолжения нажмите любую кнопку ";
+	cout << "\033[0;33mДля продолжения нажмите любую кнопку \033[0m";
 	get_key();
 }
 
-SequenceType InputType() {
-	string types[] = { "SEQUENCE", "FACTORIAL" };
-	SequenceType ctypes[] = { SQUARE, FACTORIAL };
+int InputType() {
 	int choose = 0;
 	int flag = true;
 	system("cls");
 	while (flag) {
-		cout << "<Выберите тип последовательности>" << endl;
-		cout << "1)" << "<Квадрат со сдвигом>" << endl;
-		cout << "2)" << "<Факториал>" << endl;
+		cout << "\033[0;34m<Выберите тип последовательности>\033[0m" << endl;
+		cout << "1)" << "\033[0;36m<Квадрат со сдвигом>\033[0m" << endl;
+		cout << "2)" << "\033[0;36m<Факториал>\033[0m" << endl;
 		int seq_type = get_key();
 		if (seq_type == 49) { choose = 0; flag = false; }
 		else if (seq_type == 50) { choose = 1; flag = false; }
-		else { cout << "Введено неправильное число, попробуйте ещё раз" << endl; }
+		else { cout << "\033[0;31mВведено неправильное число, попробуйте ещё раз\033[0m" << endl; }
 
 	}
-	return ctypes[choose];
+	return choose;
 }
 
-void InputShift(Sequence& seq) {
+int InputShift() {
 	int shift = 0;
-	cout << "Введите целочисленный сдиг" << endl;
+	cout << "\033[0;33mВведите целочисленный сдвиг\033[0m" << endl;
 	cin >> shift;
-	seq.set_shift(shift);
+	return shift;
+}
+
+int InputI() {
+	int i = 0;
+	cout << "\033[0;33mВведите значение, от которого будет вычисляться последовательность: \033[0m" << endl;
+	cin >> i;
+	return i;
 }
 
 int InputIndex(int size) {
 	bool flag = true;
 	int index;
 	while (flag) {
-		cout << "Введите индекс или -1, если хотите выйти: ";
+		cout << "\033[0;32mВведите индекс или \033[0m\033[0;31m-1\033[0m\033[0;32m, если хотите выйти: \033[0m";
 		cin >> index;
-		index--;
-		if (cin.fail() || index < -1 || index >= size) {
+		if (index < -1 || index >= size) {
 			std::cin.clear();
 			system("cls");
-			cout << "Неверный индекс или ввод!" << endl;
+			cout << "\033[0;31mНеверный индекс или ввод!\033[0m" << endl;
 		}
 		else {
 			flag = false;
@@ -73,12 +89,17 @@ int InputIndex(int size) {
 
 void AddSequence(SequenceList& arr) {
 	system("cls");
-	int index = InputIndex(arr.get_size() + 1);
-	if (index != -1) {
-		Sequence seq(InputType());
-		SequenceType type = seq.get_type();
-		if (type == SQUARE) { InputShift(seq); }
-		arr.insert(index, seq);
+	int index = InputIndex(arr.get_size()+2);
+	if (index == -1)return;
+	char FactSeq[] = "FactSequence";
+	char SquareSeq[] = "SquareSequence";
+	if (InputType() == 0) {
+		auto const Square = make_shared<SquareSequence>(InputI(), InputShift());
+		arr.add(Square);
+	}
+	else {
+		auto const Factorial = make_shared<FactSequence>(InputI());
+		arr.add(Factorial);
 	}
 }
 
@@ -90,33 +111,31 @@ void DeleteCharacter(SequenceList& arr) {
 
 void FindMinElem(SequenceList& arr) {
 	system("cls");
-	cout << "Введите n: ";
-	int n;
-	cin >> n;
-	int index = index_of_min_value(arr, n);
-	cout << "Последовательностью с минимальным n-ым членом, при n=" << n << " является - " << "[" << index << "]" << " " << arr[index] << endl;
+	int index = index_of_min_value(arr);
+	cout << "Последовательностью с минимальным n-ым членом" << " является - " << (typeid(*arr[index]) == typeid(SquareSequence) == 0 ? "Factorial" : "Square") << endl;
 	get_key();
 }
 
 void ChangeSequence(SequenceList& arr) {
 	system("cls");
 	int index = InputIndex(arr.get_size());
-	if (index != -1) {
-		Sequence seq(InputType());
-		SequenceType type= seq.get_type();
-		if (type == SQUARE) { InputShift(seq); }
-		arr[index] = seq;
-
+	if (InputType() == 0) {
+		auto const Square = make_shared<SquareSequence>(InputI(), InputShift());
+		arr[index] = Square;
+	}
+	else {
+		auto const Factorial = make_shared<FactSequence>(InputI());
+		arr[index] = Factorial;
 	}
 }
 
 int menu1() {
-	cout << "1)" << "Добавить последовательность в массив по индексу" << endl;
-	cout << "2)" << "Удалить последовательность из массива по индексу" << endl;
-	cout << "3)" << "Вывести последовательности на экран" << endl;
-	cout << "4)" << "Вывести последовательность с минимальным n-ым членом" << endl;
-	cout << "5)" << "Заменить последовательность из массива по индексу" << endl;
-	cout << "6)" << "Выйти" << endl;
+	cout << "1)" << "\033[0;32mДобавить последовательность в массив по индексу\033[0m" << endl;
+	cout << "2)" << "\033[0;32mУдалить последовательность из массива по индексу\033[0m" << endl;
+	cout << "3)" << "\033[0;32mВывести последовательности на экран\033[0m" << endl;
+	cout << "4)" << "\033[0;32mВывести последовательность с минимальным n-ым членом\033[0m" << endl;
+	cout << "5)" << "\033[0;32mЗаменить последовательность из массива по индексу\033[0m" << endl;
+	cout << "6)" << "\033[0;32mВыйти\033[0m" << endl;
 
 	while (true) {
 		int key = get_key();
@@ -124,15 +143,12 @@ int menu1() {
 	}
 }
 
-
-
-
 int main() {
 	setlocale(LC_ALL, "Russian");
 	SequenceList array;
 	while (true) {
 		system("cls");
-		printf("Меню.\n");
+		cout << "\033[1;34mМеню:\033[0m " << endl;
 		int m1 = menu1();
 		if (m1 == 49) { system("cls"); AddSequence(array); }
 		if (m1 == 50) { DeleteCharacter(array); }

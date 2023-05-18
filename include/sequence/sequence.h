@@ -1,49 +1,81 @@
 #pragma once
+#include <memory>
 #include <string>
+#include <vector>
 
 namespace sequences {
 
-	enum SequenceType
-	{
-		SQUARE,
-		FACTORIAL,
-	};
+	class Sequence;
+
+	using SequencePtr = std::shared_ptr<Sequence>;
 
 	class Sequence {
-		SequenceType _type;
-		int _shift;
+	public:
+		virtual int compute_nth() const = 0;
+
+		virtual SequencePtr clone() const = 0;
+		virtual bool equals(SequencePtr other) const = 0;
+
+		virtual ~Sequence() = default;
+
+	protected:
+		Sequence() = default;
+		Sequence(const Sequence&) = default;
+		Sequence& operator=(const Sequence&) = default;
+	};
+
+	class FactSequence : public Sequence {
+	private:
+		int _i;
 
 	public:
-		friend std::ostream& operator<<(std::ostream& out, const SequenceType& type);
-		friend std::ostream& operator<<(std::ostream& out, const Sequence& seq);
-		Sequence(SequenceType type, int shift);
-		Sequence(SequenceType type);
-		Sequence();
-		SequenceType get_type() const;
-		int compute_nth(int n) const;
-		int set_shift(int shift);
-		int get_shift();
+		FactSequence(int i);
+
+		int get_i() const;
+
+		int compute_nth()const override;
+
+		SequencePtr clone()const override;
+		bool equals(SequencePtr other) const override;
+	};
+
+	class SquareSequence : public Sequence{
+	private:
+		int _i;
+		int _shift;
+	public:
+		SquareSequence(int i, int shift);
+
+		int get_i()const;
+		int get_shift()const;
+		void set_shift(int shift);
+
+		int compute_nth()const override;
+
+		SequencePtr clone() const override;
+		bool equals(SequencePtr other) const override;
 	};
 
 	class SequenceList {
-		int _size;
-		Sequence** _array;
+	private:
+		std::vector<SequencePtr> _sequences;
+
 	public:
-		SequenceList(const SequenceList& arr);
-		SequenceList() : _size(0), _array(nullptr) {};
-		SequenceList(int size);
+		SequenceList() = default;
+
+		SequenceList(const SequenceList& other);
+
+		SequenceList& operator=(const SequenceList & rhs);
+
 		int get_size() const;
-		void insert(int index, Sequence& s);
+
+		SequencePtr operator[](int index) const;
+
+		void add(SequencePtr seq);
 		void remove(int index);
 
-		Sequence& operator[](int index);
-		Sequence operator[](int index) const;
-
 		void swap(SequenceList& arr);
-		~SequenceList();
-		SequenceList& operator=(SequenceList arr);
 	};
 
-	int index_of_min_value(const SequenceList& sequence, int c);
-
+	int index_of_min_value(const SequenceList& sequence);
 }
